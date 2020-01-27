@@ -3,9 +3,9 @@ pragma solidity 0.5.12;
 
 contract GasReserve {
     uint256[] g;
-    
+
     function reserveGas(uint256 quantity) internal {
-        if (quantity > 0) 
+        if (quantity > 0)
             reserve(quantity);
     }
     
@@ -27,9 +27,11 @@ contract GasReserve {
     }
     
     function reserve(uint256 quantity) private {
-        uint256 start = getReserveAddr() + g.length;
+        uint256 len = g.length;
+        uint256 start = getReserveAddr() + len;
         uint256 end = start + quantity;
-        uint256 len = g.length + quantity;
+        
+        len = len + quantity;
         
         for (uint256 i = start; i < end; i ++) {
             assembly {
@@ -42,9 +44,11 @@ contract GasReserve {
     }
     
     function release(uint256 quantity) private {
-        uint256 start = getReserveAddr() + (g.length - quantity);
-        uint256 end = getReserveAddr() + g.length;
-        uint256 len = g.length - quantity;
+        uint256 len = g.length;
+        uint256 start = getReserveAddr() + (len - quantity);
+        uint256 end = getReserveAddr() + len;
+        
+        len = len - quantity;
         
         for (uint256 i = start; i < end; i++) {
             assembly {
